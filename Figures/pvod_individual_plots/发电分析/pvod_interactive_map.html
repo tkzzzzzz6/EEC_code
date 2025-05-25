@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_133fa52d0b8b0f78dfe086f1a5b72f28 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 50px; left: 50px; width: 200px; height: 160px; 
+                    background-color: white; border: 2px solid #999; z-index: 9999; 
+                    font-size: 13px; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            <h4 style="margin: 0 0 10px 0; color: #2c3e50; text-align: center; 
+                       border-bottom: 1px solid #bdc3c7; padding-bottom: 5px;">
+            </h4>
+            <div style="margin: 8px 0;">
+                <span style="color: green; font-size: 16px;">●</span> 
+                <span style="margin-left: 8px;">>20%: 优秀表现</span>
+            </div>
+            <div style="margin: 8px 0;">
+                <span style="color: orange; font-size: 16px;">●</span> 
+                <span style="margin-left: 8px;">15-20%: 良好表现</span>
+            </div>
+            <div style="margin: 8px 0;">
+                <span style="color: darkorange; font-size: 16px;">●</span> 
+                <span style="margin-left: 8px;">10-15%: 一般表现</span>
+            </div>
+            <div style="margin: 8px 0;">
+                <span style="color: red; font-size: 16px;">●</span> 
+                <span style="margin-left: 8px;"><10%: 待提升</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 11px; color: #7f8c8d; font-style: italic;">
+            </div>
+        </div>
+        
+    
+            <div class="folium-map" id="map_133fa52d0b8b0f78dfe086f1a5b72f28" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_133fa52d0b8b0f78dfe086f1a5b72f28 = L.map(
+                "map_133fa52d0b8b0f78dfe086f1a5b72f28",
+                {
+                    center: [37.91306470000001, 114.68638150000001],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 7,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7a87ee7414d6ba9123bcbfb1389fc467 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_7a87ee7414d6ba9123bcbfb1389fc467.addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var tile_layer_4a7e311af32b61d999bb351d003982dd = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_4a7e311af32b61d999bb351d003982dd.addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var tile_layer_4dc0e4e42a958bc1f2330250b557450b = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_4dc0e4e42a958bc1f2330250b557450b.addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var circle_marker_71b6a655dabf2324cb1b8859602f9c06 = L.circleMarker(
+                [38.04778, 114.95139],
+                {"bubblingMouseEvents": true, "color": "darkorange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.665665381021597, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_d473eb5bd3ebb8a9498fcd3af5577e8d = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_49bcfb2510b0e521e6b40af68e57d227 = $(`<div id="html_49bcfb2510b0e521e6b40af68e57d227" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station00</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(38.048°, 114.951°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">6.6 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">12.6%</span>                     <span style="background: orange; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">一般</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">5.5 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_d473eb5bd3ebb8a9498fcd3af5577e8d.setContent(html_49bcfb2510b0e521e6b40af68e57d227);
+            
+        
+
+        circle_marker_71b6a655dabf2324cb1b8859602f9c06.bindPopup(popup_d473eb5bd3ebb8a9498fcd3af5577e8d)
+        ;
+
+        
+    
+    
+            circle_marker_71b6a655dabf2324cb1b8859602f9c06.bindTooltip(
+                `<div>
+                     station00: 12.6% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d15df6cb19856c04da676e820464e3ed = L.marker(
+                [38.04778, 114.95139],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_e3cc6836d391c024d4918d84e665f439 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation00\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_d15df6cb19856c04da676e820464e3ed.setIcon(div_icon_e3cc6836d391c024d4918d84e665f439);
+            
+    
+            var circle_marker_b3f51ed3337641bf24402dd60e8dce7b = L.circleMarker(
+                [38.18306, 117.45722],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 33.09849663846983, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_b7d7a22b5c285788ac7c9785fcd70e4d = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_7a539baabc6de09b29a87c9b7cc0fceb = $(`<div id="html_7a539baabc6de09b29a87c9b7cc0fceb" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station01</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(38.183°, 117.457°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">18.4%</span>                     <span style="background: yellow; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">良好</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_b7d7a22b5c285788ac7c9785fcd70e4d.setContent(html_7a539baabc6de09b29a87c9b7cc0fceb);
+            
+        
+
+        circle_marker_b3f51ed3337641bf24402dd60e8dce7b.bindPopup(popup_b7d7a22b5c285788ac7c9785fcd70e4d)
+        ;
+
+        
+    
+    
+            circle_marker_b3f51ed3337641bf24402dd60e8dce7b.bindTooltip(
+                `<div>
+                     station01: 18.4% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_1dbeaba508be09ce9185f10d977315d4 = L.marker(
+                [38.18306, 117.45722],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_81ec2fae697d317a0ce1256dc9bec7a1 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation01\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_1dbeaba508be09ce9185f10d977315d4.setIcon(div_icon_81ec2fae697d317a0ce1256dc9bec7a1);
+            
+    
+            var circle_marker_73ce3f6cea1a674996da823f34dbc6fe = L.circleMarker(
+                [38.05728, 114.19887],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 27.33222656650121, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_1d00bab4fdbe9a5f715aa6254c6376f2 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_3dd5b3d78a8ab9306004e3cb8daaf7a4 = $(`<div id="html_3dd5b3d78a8ab9306004e3cb8daaf7a4" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station02</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(38.057°, 114.199°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">17.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">15.2%</span>                     <span style="background: yellow; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">良好</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">16.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Mono-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_1d00bab4fdbe9a5f715aa6254c6376f2.setContent(html_3dd5b3d78a8ab9306004e3cb8daaf7a4);
+            
+        
+
+        circle_marker_73ce3f6cea1a674996da823f34dbc6fe.bindPopup(popup_1d00bab4fdbe9a5f715aa6254c6376f2)
+        ;
+
+        
+    
+    
+            circle_marker_73ce3f6cea1a674996da823f34dbc6fe.bindTooltip(
+                `<div>
+                     station02: 15.2% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_08be0c56efd800d5ce0acb3f9833d3ed = L.marker(
+                [38.05728, 114.19887],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_f6fc567378fab3d6ee947f4a3fd630bd = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation02\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_08be0c56efd800d5ce0acb3f9833d3ed.setIcon(div_icon_f6fc567378fab3d6ee947f4a3fd630bd);
+            
+    
+            var circle_marker_2a5f259a4837362709d44ae4db3487e8 = L.circleMarker(
+                [38.10956, 114.11494],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "yellow", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 30.373700806985294, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_d889e96a838265ed0eaa4acd6e1a9a01 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_d899d5a137dbd21eba434246d54d551f = $(`<div id="html_d899d5a137dbd21eba434246d54d551f" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station03</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(38.110°, 114.115°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">16.9%</span>                     <span style="background: yellow; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">良好</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">17.4 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_d889e96a838265ed0eaa4acd6e1a9a01.setContent(html_d899d5a137dbd21eba434246d54d551f);
+            
+        
+
+        circle_marker_2a5f259a4837362709d44ae4db3487e8.bindPopup(popup_d889e96a838265ed0eaa4acd6e1a9a01)
+        ;
+
+        
+    
+    
+            circle_marker_2a5f259a4837362709d44ae4db3487e8.bindTooltip(
+                `<div>
+                     station03: 16.9% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_3f122160d3f1854354777628fd710092 = L.marker(
+                [38.10956, 114.11494],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_64e1932cbe0139baf170d31757a894f6 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation03\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_3f122160d3f1854354777628fd710092.setIcon(div_icon_64e1932cbe0139baf170d31757a894f6);
+            
+    
+            var circle_marker_915886cdd7c29be077b6a4cd2c3dc851 = L.circleMarker(
+                [39.5155, 114.86767],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 40, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_3440f79c075492763fddcc645bf24db4 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_a7dddf583d4c0303fce6c26009967d54 = $(`<div id="html_a7dddf583d4c0303fce6c26009967d54" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station04</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(39.516°, 114.868°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">22.7%</span>                     <span style="background: green; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">优秀</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">26.8 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_3440f79c075492763fddcc645bf24db4.setContent(html_a7dddf583d4c0303fce6c26009967d54);
+            
+        
+
+        circle_marker_915886cdd7c29be077b6a4cd2c3dc851.bindPopup(popup_3440f79c075492763fddcc645bf24db4)
+        ;
+
+        
+    
+    
+            circle_marker_915886cdd7c29be077b6a4cd2c3dc851.bindTooltip(
+                `<div>
+                     station04: 22.7% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ab170b3316ebc74cb7f37879b58d6731 = L.marker(
+                [39.5155, 114.86767],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_e51e45ab3f277d8917d23997d50ae6cf = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation04\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_ab170b3316ebc74cb7f37879b58d6731.setIcon(div_icon_e51e45ab3f277d8917d23997d50ae6cf);
+            
+    
+            var circle_marker_1ea0ee568509d4f51163011b663f7ce6 = L.circleMarker(
+                [38.2355, 114.1236],
+                {"bubblingMouseEvents": true, "color": "darkgreen", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36.28598084034654, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_0149ed20b0a2c5e416ca12930b492692 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_3320a1c4fb1810de64bb323293f7a450 = $(`<div id="html_3320a1c4fb1810de64bb323293f7a450" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station05</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(38.236°, 114.124°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">35.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">20.2%</span>                     <span style="background: green; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">优秀</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">35.1 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_0149ed20b0a2c5e416ca12930b492692.setContent(html_3320a1c4fb1810de64bb323293f7a450);
+            
+        
+
+        circle_marker_1ea0ee568509d4f51163011b663f7ce6.bindPopup(popup_0149ed20b0a2c5e416ca12930b492692)
+        ;
+
+        
+    
+    
+            circle_marker_1ea0ee568509d4f51163011b663f7ce6.bindTooltip(
+                `<div>
+                     station05: 20.2% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_767e6eaa3980e08aa523d828866690eb = L.marker(
+                [38.2355, 114.1236],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_a5cb38c990c37c750664c764cbf3b159 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation05\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_767e6eaa3980e08aa523d828866690eb.setIcon(div_icon_a5cb38c990c37c750664c764cbf3b159);
+            
+    
+            var circle_marker_47bbee323c097e5bfd92cfdbc0ac86b5 = L.circleMarker(
+                [36.89891, 114.54841],
+                {"bubblingMouseEvents": true, "color": "darkorange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20.318512681712964, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_6a790d6bc19a01ce7ffbd31cd63cb1a8 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_0c978d786be450f270052e25a014096a = $(`<div id="html_0c978d786be450f270052e25a014096a" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station06</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(36.899°, 114.548°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">15.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">11.3%</span>                     <span style="background: orange; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">一般</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">11.7 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_6a790d6bc19a01ce7ffbd31cd63cb1a8.setContent(html_0c978d786be450f270052e25a014096a);
+            
+        
+
+        circle_marker_47bbee323c097e5bfd92cfdbc0ac86b5.bindPopup(popup_6a790d6bc19a01ce7ffbd31cd63cb1a8)
+        ;
+
+        
+    
+    
+            circle_marker_47bbee323c097e5bfd92cfdbc0ac86b5.bindTooltip(
+                `<div>
+                     station06: 11.3% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_5420495500407ff93e836caf849400dd = L.marker(
+                [36.89891, 114.54841],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_a468d04f32279a2af1a5964528a85dc9 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation06\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_5420495500407ff93e836caf849400dd.setIcon(div_icon_a468d04f32279a2af1a5964528a85dc9);
+            
+    
+            var circle_marker_b9340a5caf1d90c07dcf9170f6cc50ea = L.circleMarker(
+                [36.64403, 113.64187],
+                {"bubblingMouseEvents": true, "color": "darkorange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 23.56725896009475, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_998523f1775001615daf7986c9143b41 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_e59bb0098a61be1623ce4533885bf8b2 = $(`<div id="html_e59bb0098a61be1623ce4533885bf8b2" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station07</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(36.644°, 113.642°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">13.1%</span>                     <span style="background: orange; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">一般</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">17.3 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_998523f1775001615daf7986c9143b41.setContent(html_e59bb0098a61be1623ce4533885bf8b2);
+            
+        
+
+        circle_marker_b9340a5caf1d90c07dcf9170f6cc50ea.bindPopup(popup_998523f1775001615daf7986c9143b41)
+        ;
+
+        
+    
+    
+            circle_marker_b9340a5caf1d90c07dcf9170f6cc50ea.bindTooltip(
+                `<div>
+                     station07: 13.1% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f752650ce142d4bafd96df695f70cf58 = L.marker(
+                [36.64403, 113.64187],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_eb9e06eddf20acee6143256483dbf51b = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation07\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_f752650ce142d4bafd96df695f70cf58.setIcon(div_icon_eb9e06eddf20acee6143256483dbf51b);
+            
+    
+            var circle_marker_8632bec2abeb53e15f76f984739de65e = L.circleMarker(
+                [36.70761, 113.89999],
+                {"bubblingMouseEvents": true, "color": "darkorange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 25.92695872826087, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_61040bb92f2331d32949ca65c0ed00d1 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_bc754d788c245cea7624c3e0cb41b268 = $(`<div id="html_bc754d788c245cea7624c3e0cb41b268" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station08</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(36.708°, 113.900°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">14.4%</span>                     <span style="background: orange; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">一般</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">17.9 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_61040bb92f2331d32949ca65c0ed00d1.setContent(html_bc754d788c245cea7624c3e0cb41b268);
+            
+        
+
+        circle_marker_8632bec2abeb53e15f76f984739de65e.bindPopup(popup_61040bb92f2331d32949ca65c0ed00d1)
+        ;
+
+        
+    
+    
+            circle_marker_8632bec2abeb53e15f76f984739de65e.bindTooltip(
+                `<div>
+                     station08: 14.4% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9cdf95a5a590d5c03d1370c072013284 = L.marker(
+                [36.70761, 113.89999],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_80d1393a26ff01b22f5db57e1718e1d0 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation08\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_9cdf95a5a590d5c03d1370c072013284.setIcon(div_icon_80d1393a26ff01b22f5db57e1718e1d0);
+            
+    
+            var circle_marker_31eedc56a3cd2584e5989b5568fb10d4 = L.circleMarker(
+                [38.731417, 115.059855],
+                {"bubblingMouseEvents": true, "color": "darkred", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.17579764735672, "stroke": true, "weight": 3}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+        var popup_b4bb46b28247665c6d3884ef7c4b6b70 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_c8d56406a3f53953082fa2b4f8fd2f6b = $(`<div id="html_c8d56406a3f53953082fa2b4f8fd2f6b" style="width: 100.0%; height: 100.0%;">             <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; width: 280px; padding: 10px;">                 <h3 style="margin: 0 0 10px 0; color: #2E86AB; text-align: center;">🔆 station09</h3>                 <hr style="margin: 10px 0; border: 1px solid #ddd;">                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">📍 地理位置:</span>                      <span style="color: #666;">(38.731°, 115.060°)</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔋 装机容量:</span>                      <span style="color: #e74c3c; font-weight: bold;">20.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">⚡ 容量因子:</span>                      <span style="color: #27ae60; font-weight: bold;">6.8%</span>                     <span style="background: red; color: white; padding: 2px 6px; border-radius: 10px;                             font-size: 11px; margin-left: 5px;">较差</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔥 最大功率:</span>                      <span style="color: #f39c12; font-weight: bold;">12.0 MW</span>                 </div>                                  <div style="margin: 8px 0;">                     <span style="font-weight: bold; color: #333;">🔬 技术类型:</span>                      <span style="color: #8e44ad;">Poly-Si</span>                 </div>                                  <div style="margin-top: 10px; padding: 5px; background: #f8f9fa; border-radius: 5px; font-size: 12px;">                     <strong>性能等级:</strong> 圆圈大小表示容量因子水平                 </div>             </div>             </div>`)[0];
+                popup_b4bb46b28247665c6d3884ef7c4b6b70.setContent(html_c8d56406a3f53953082fa2b4f8fd2f6b);
+            
+        
+
+        circle_marker_31eedc56a3cd2584e5989b5568fb10d4.bindPopup(popup_b4bb46b28247665c6d3884ef7c4b6b70)
+        ;
+
+        
+    
+    
+            circle_marker_31eedc56a3cd2584e5989b5568fb10d4.bindTooltip(
+                `<div>
+                     station09: 6.8% 容量因子
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_bd6fc06f843f9fc29b5e76fff01fcd9c = L.marker(
+                [38.731417, 115.059855],
+                {
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var div_icon_1ab1f43bf11af4ab186310251a2ae8f1 = L.divIcon({
+  "html": "\u003cdiv style=\"\n                        font-size: 11px; \n                        color: white; \n                        font-weight: bold; \n                        text-align: center;\n                        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);\n                        background: rgba(0,0,0,0.7);\n                        border-radius: 4px;\n                        padding: 3px 6px;\n                        border: 1px solid white;\n                    \"\u003estation09\u003c/div\u003e",
+  "iconSize": [60, 25],
+  "iconAnchor": [30, 12],
+  "className": "empty",
+});
+        
+    
+                marker_bd6fc06f843f9fc29b5e76fff01fcd9c.setIcon(div_icon_1ab1f43bf11af4ab186310251a2ae8f1);
+            
+    
+            var heat_map_78590594ce112c1aeeab6dadc8126df6 = L.heatLayer(
+                [[38.04778, 114.95139, 12.592036322789776], [38.18306, 117.45722, 18.388053688038795], [38.05728, 114.19887, 15.184570314722894], [38.10956, 114.11494, 16.87427822610294], [39.5155, 114.86767, 22.671398298012452], [38.2355, 114.1236, 20.158878244636966], [36.89891, 114.54841, 11.288062600951646], [36.64403, 113.64187, 13.092921644497084], [36.70761, 113.89999, 14.403865960144929], [38.731417, 115.059855, 6.764332026309289]],
+                {
+  "minOpacity": 0.3,
+  "maxZoom": 18,
+  "radius": 30,
+  "blur": 20,
+  "gradient": {
+  0.2: "#313695",
+  0.4: "#4575b4",
+  0.6: "#74add1",
+  0.8: "#fdae61",
+  1.0: "#d73027",
+},
+}
+            );
+        
+    
+            heat_map_78590594ce112c1aeeab6dadc8126df6.addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var marker_cluster_a32656a8b7e907af356c71893cf48fb8 = L.markerClusterGroup(
+                {
+  "maxClusterRadius": 50,
+}
+            );
+        
+    
+            var marker_6ae69e697262a28c495f6012acb924e9 = L.marker(
+                [38.04778, 114.95139],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_8fd9004ff5de565bc76bb434f63a2c26 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e4e2d82cebb43ab6ab12f0c0fec4db39 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c11f53a0fab73503b9de6149dff8cca3 = $(`<div id="html_c11f53a0fab73503b9de6149dff8cca3" style="width: 100.0%; height: 100.0%;"><b>station00</b><br>容量因子: 12.6%<br>装机容量: 6.6MW</div>`)[0];
+                popup_e4e2d82cebb43ab6ab12f0c0fec4db39.setContent(html_c11f53a0fab73503b9de6149dff8cca3);
+            
+        
+
+        marker_6ae69e697262a28c495f6012acb924e9.bindPopup(popup_e4e2d82cebb43ab6ab12f0c0fec4db39)
+        ;
+
+        
+    
+    
+                marker_6ae69e697262a28c495f6012acb924e9.setIcon(icon_8fd9004ff5de565bc76bb434f63a2c26);
+            
+    
+            var marker_07c02b391a8969bc3f85952c7c1f3aa7 = L.marker(
+                [38.18306, 117.45722],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_b0a182593f96a346cd79867985345c76 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c486cf4e17e74b8e36a8d049b0eaacdf = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7b9b8e076f03eebdd00ee1f7516b2a3a = $(`<div id="html_7b9b8e076f03eebdd00ee1f7516b2a3a" style="width: 100.0%; height: 100.0%;"><b>station01</b><br>容量因子: 18.4%<br>装机容量: 20.0MW</div>`)[0];
+                popup_c486cf4e17e74b8e36a8d049b0eaacdf.setContent(html_7b9b8e076f03eebdd00ee1f7516b2a3a);
+            
+        
+
+        marker_07c02b391a8969bc3f85952c7c1f3aa7.bindPopup(popup_c486cf4e17e74b8e36a8d049b0eaacdf)
+        ;
+
+        
+    
+    
+                marker_07c02b391a8969bc3f85952c7c1f3aa7.setIcon(icon_b0a182593f96a346cd79867985345c76);
+            
+    
+            var marker_cd5bd940a5227bcf49a38e056a2ed240 = L.marker(
+                [38.05728, 114.19887],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_3171fe3b3882ada62825bcdb218e443d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_29acffe67e07ce5778d2c0955bfae89a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1a7fbcca5a75cd060c96834a9b238b32 = $(`<div id="html_1a7fbcca5a75cd060c96834a9b238b32" style="width: 100.0%; height: 100.0%;"><b>station02</b><br>容量因子: 15.2%<br>装机容量: 17.0MW</div>`)[0];
+                popup_29acffe67e07ce5778d2c0955bfae89a.setContent(html_1a7fbcca5a75cd060c96834a9b238b32);
+            
+        
+
+        marker_cd5bd940a5227bcf49a38e056a2ed240.bindPopup(popup_29acffe67e07ce5778d2c0955bfae89a)
+        ;
+
+        
+    
+    
+                marker_cd5bd940a5227bcf49a38e056a2ed240.setIcon(icon_3171fe3b3882ada62825bcdb218e443d);
+            
+    
+            var marker_76cbbd55222d9bf9b6c671d26a6a3c6b = L.marker(
+                [38.10956, 114.11494],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_9fa6deb523641af21e0f76846599617f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e2cccdabcbaf47f59d1803a554b9dcba = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5a4cc42984fbd5179c0b83fd2dd6fbda = $(`<div id="html_5a4cc42984fbd5179c0b83fd2dd6fbda" style="width: 100.0%; height: 100.0%;"><b>station03</b><br>容量因子: 16.9%<br>装机容量: 20.0MW</div>`)[0];
+                popup_e2cccdabcbaf47f59d1803a554b9dcba.setContent(html_5a4cc42984fbd5179c0b83fd2dd6fbda);
+            
+        
+
+        marker_76cbbd55222d9bf9b6c671d26a6a3c6b.bindPopup(popup_e2cccdabcbaf47f59d1803a554b9dcba)
+        ;
+
+        
+    
+    
+                marker_76cbbd55222d9bf9b6c671d26a6a3c6b.setIcon(icon_9fa6deb523641af21e0f76846599617f);
+            
+    
+            var marker_c8fc964d7cb0b1af75571cf4c29536f5 = L.marker(
+                [39.5155, 114.86767],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_c4976077201ea911d314d5abcd1408ad = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f7e7fb07a3e0e8bff77b2588bbcb5580 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_89c989eaf31ce8714843fbccd2de70bc = $(`<div id="html_89c989eaf31ce8714843fbccd2de70bc" style="width: 100.0%; height: 100.0%;"><b>station04</b><br>容量因子: 22.7%<br>装机容量: 20.0MW</div>`)[0];
+                popup_f7e7fb07a3e0e8bff77b2588bbcb5580.setContent(html_89c989eaf31ce8714843fbccd2de70bc);
+            
+        
+
+        marker_c8fc964d7cb0b1af75571cf4c29536f5.bindPopup(popup_f7e7fb07a3e0e8bff77b2588bbcb5580)
+        ;
+
+        
+    
+    
+                marker_c8fc964d7cb0b1af75571cf4c29536f5.setIcon(icon_c4976077201ea911d314d5abcd1408ad);
+            
+    
+            var marker_3f9e08e59015b17a1984070e702ec05d = L.marker(
+                [38.2355, 114.1236],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_0c1c39351c03ae6dd5875f5321667790 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c38666fd5634f9cd2d328af1e33457ed = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_343b85e9cf8dc6e3953b689c5f34e71b = $(`<div id="html_343b85e9cf8dc6e3953b689c5f34e71b" style="width: 100.0%; height: 100.0%;"><b>station05</b><br>容量因子: 20.2%<br>装机容量: 35.0MW</div>`)[0];
+                popup_c38666fd5634f9cd2d328af1e33457ed.setContent(html_343b85e9cf8dc6e3953b689c5f34e71b);
+            
+        
+
+        marker_3f9e08e59015b17a1984070e702ec05d.bindPopup(popup_c38666fd5634f9cd2d328af1e33457ed)
+        ;
+
+        
+    
+    
+                marker_3f9e08e59015b17a1984070e702ec05d.setIcon(icon_0c1c39351c03ae6dd5875f5321667790);
+            
+    
+            var marker_778e830245416e122d3621b77f8b806b = L.marker(
+                [36.89891, 114.54841],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_8d997d8caa15acf79b0c3b7a63c9ce3a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a73df7110c89f1493f05dd52eec5520c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e87f50c49400bf76044d4e8aad73e71d = $(`<div id="html_e87f50c49400bf76044d4e8aad73e71d" style="width: 100.0%; height: 100.0%;"><b>station06</b><br>容量因子: 11.3%<br>装机容量: 15.0MW</div>`)[0];
+                popup_a73df7110c89f1493f05dd52eec5520c.setContent(html_e87f50c49400bf76044d4e8aad73e71d);
+            
+        
+
+        marker_778e830245416e122d3621b77f8b806b.bindPopup(popup_a73df7110c89f1493f05dd52eec5520c)
+        ;
+
+        
+    
+    
+                marker_778e830245416e122d3621b77f8b806b.setIcon(icon_8d997d8caa15acf79b0c3b7a63c9ce3a);
+            
+    
+            var marker_a2511a51b801dd450e7c6518ecddfcd5 = L.marker(
+                [36.64403, 113.64187],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_325ba1d9ff1cd6aa5a343cebefb534bc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_90aa8d9c72cf8374298e54028b8bcf95 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d4f0f465a17c9aafda2bdcbe5bc37555 = $(`<div id="html_d4f0f465a17c9aafda2bdcbe5bc37555" style="width: 100.0%; height: 100.0%;"><b>station07</b><br>容量因子: 13.1%<br>装机容量: 20.0MW</div>`)[0];
+                popup_90aa8d9c72cf8374298e54028b8bcf95.setContent(html_d4f0f465a17c9aafda2bdcbe5bc37555);
+            
+        
+
+        marker_a2511a51b801dd450e7c6518ecddfcd5.bindPopup(popup_90aa8d9c72cf8374298e54028b8bcf95)
+        ;
+
+        
+    
+    
+                marker_a2511a51b801dd450e7c6518ecddfcd5.setIcon(icon_325ba1d9ff1cd6aa5a343cebefb534bc);
+            
+    
+            var marker_34f9eac12f52c80ee151f9a7f278efc1 = L.marker(
+                [36.70761, 113.89999],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_bba4f76708d3e2e1eb61fa583d4e427d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_142f22644af0e3f6293a286bcf75f88a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_95937e963a5b7547b3d304c99dab1500 = $(`<div id="html_95937e963a5b7547b3d304c99dab1500" style="width: 100.0%; height: 100.0%;"><b>station08</b><br>容量因子: 14.4%<br>装机容量: 20.0MW</div>`)[0];
+                popup_142f22644af0e3f6293a286bcf75f88a.setContent(html_95937e963a5b7547b3d304c99dab1500);
+            
+        
+
+        marker_34f9eac12f52c80ee151f9a7f278efc1.bindPopup(popup_142f22644af0e3f6293a286bcf75f88a)
+        ;
+
+        
+    
+    
+                marker_34f9eac12f52c80ee151f9a7f278efc1.setIcon(icon_bba4f76708d3e2e1eb61fa583d4e427d);
+            
+    
+            var marker_b09a197da700a9e53418c9a2176adec2 = L.marker(
+                [38.731417, 115.059855],
+                {
+}
+            ).addTo(marker_cluster_a32656a8b7e907af356c71893cf48fb8);
+        
+    
+            var icon_7accafda77273c9302e6013d117802d5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "bolt",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0731e14d6ca0077d439ee28135086381 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c8963711d1545103135ff8b4a76f3f67 = $(`<div id="html_c8963711d1545103135ff8b4a76f3f67" style="width: 100.0%; height: 100.0%;"><b>station09</b><br>容量因子: 6.8%<br>装机容量: 20.0MW</div>`)[0];
+                popup_0731e14d6ca0077d439ee28135086381.setContent(html_c8963711d1545103135ff8b4a76f3f67);
+            
+        
+
+        marker_b09a197da700a9e53418c9a2176adec2.bindPopup(popup_0731e14d6ca0077d439ee28135086381)
+        ;
+
+        
+    
+    
+                marker_b09a197da700a9e53418c9a2176adec2.setIcon(icon_7accafda77273c9302e6013d117802d5);
+            
+    
+            marker_cluster_a32656a8b7e907af356c71893cf48fb8.addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var measure_control_4f29615119151b638cdd3ae53f73baf1 = new L.Control.Measure(
+                {
+  "position": "topright",
+  "primaryLengthUnit": "meters",
+  "secondaryLengthUnit": "miles",
+  "primaryAreaUnit": "sqmeters",
+  "secondaryAreaUnit": "acres",
+});
+            map_133fa52d0b8b0f78dfe086f1a5b72f28.addControl(measure_control_4f29615119151b638cdd3ae53f73baf1);
+
+            // Workaround for using this plugin with Leaflet>=1.8.0
+            // https://github.com/ljagis/leaflet-measure/issues/171
+            L.Control.Measure.include({
+                _setCaptureMarkerIcon: function () {
+                    // disable autopan
+                    this._captureMarker.options.autoPanOnFocus = false;
+                    // default function
+                    this._captureMarker.setIcon(
+                        L.divIcon({
+                            iconSize: this._map.getSize().multiplyBy(2)
+                        })
+                    );
+                },
+            });
+
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+        
+    
+            var layer_control_66a6f077d49b4094e73a33643a84ac7c_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_7a87ee7414d6ba9123bcbfb1389fc467,
+                    "\u7b80\u6d01\u5730\u56fe" : tile_layer_4a7e311af32b61d999bb351d003982dd,
+                    "\u6697\u8272\u5730\u56fe" : tile_layer_4dc0e4e42a958bc1f2330250b557450b,
+                },
+                overlays :  {
+                    "\ud83d\udd25 \u6027\u80fd\u70ed\u529b\u56fe" : heat_map_78590594ce112c1aeeab6dadc8126df6,
+                    "\ud83d\udccd \u805a\u7c7b\u6807\u8bb0" : marker_cluster_a32656a8b7e907af356c71893cf48fb8,
+                },
+            };
+            let layer_control_66a6f077d49b4094e73a33643a84ac7c = L.control.layers(
+                layer_control_66a6f077d49b4094e73a33643a84ac7c_layers.base_layers,
+                layer_control_66a6f077d49b4094e73a33643a84ac7c_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_133fa52d0b8b0f78dfe086f1a5b72f28);
+
+        
+</script>
+</html>
