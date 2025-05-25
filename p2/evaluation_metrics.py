@@ -5,41 +5,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 
-# 更兼容的中文字体设置
+# 简化的中文字体设置 - 参考成功案例
 import matplotlib as mpl
-try:
-    # 尝试多种中文字体
-    font_candidates = [
-        'C:/Windows/Fonts/simhei.ttf',
-        'C:/Windows/Fonts/simsun.ttc', 
-        'C:/Windows/Fonts/msyh.ttc',
-        'SimHei', 'Microsoft YaHei', 'SimSun'
-    ]
-    
-    font_set = False
-    for font in font_candidates:
-        try:
-            if font.endswith('.ttf') or font.endswith('.ttc'):
-                mpl.font_manager.fontManager.addfont(font)
-                font_name = mpl.font_manager.FontProperties(fname=font).get_name()
-                plt.rcParams['font.sans-serif'] = [font_name]
-            else:
-                plt.rcParams['font.sans-serif'] = [font]
-            font_set = True
-            break
-        except:
-            continue
-    
-    if not font_set:
-        # 如果都失败，使用默认设置
-        plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
-        
-except Exception as e:
-    # 备用方案
-    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
-
+font_path = 'C:/Windows/Fonts/simhei.ttf'
+mpl.font_manager.fontManager.addfont(font_path)  
+mpl.rc('font', family='simhei')
 plt.rcParams['axes.unicode_minus'] = False
-plt.style.use('seaborn-v0_8')
+
+
 sns.set_palette("husl")
 
 # 设置不显示图片弹窗
@@ -56,6 +29,11 @@ class PowerPredictionEvaluator:
             capacity: 开机容量 (MW)
         """
         self.capacity = capacity
+    
+    def ensure_chinese_font(self):
+        """确保中文字体设置正确应用"""
+        mpl.rc('font', family='simhei')
+        plt.rcParams['axes.unicode_minus'] = False
     
     def calculate_metrics(self, actual_power, predicted_power, only_daytime=True):
         """
@@ -123,83 +101,115 @@ class PowerPredictionEvaluator:
     
     def create_evaluation_visualization(self, actual, predicted, station_id, save_dir="results/figures"):
         """创建评价可视化图表"""
+        self.ensure_chinese_font()
+        
         save_dir = Path(save_dir)
         save_dir.mkdir(parents=True, exist_ok=True)
         
+        # 只使用白天时段的数据进行误差分析
+        daytime_mask = (actual > 0) | (predicted > 0)
+        actual_day = actual[daytime_mask]
+        predicted_day = predicted[daytime_mask]
+        
+        if len(actual_day) == 0:
+            print(f"⚠️ {station_id} 没有白天时段数据，跳过可视化")
+            return
+        
         # 创建综合评价图表
         fig, axes = plt.subplots(2, 3, figsize=(18, 12))
-        fig.suptitle(f'{station_id} 预测性能详细评价', fontsize=16, fontweight='bold')
+        fig.suptitle(f'{station_id} 预测性能详细评价 (仅白天时段)', fontsize=16, fontweight='bold')
         
-        # 1. 时间序列对比
+        # 1. 时间序列对比 - 显示全部数据但标注白天时段
         ax1 = axes[0, 0]
         time_index = range(len(actual))
-        ax1.plot(time_index, actual, label='实际功率', alpha=0.8, linewidth=1.5)
-        ax1.plot(time_index, predicted, label='预测功率', alpha=0.8, linewidth=1.5)
-        ax1.set_title('预测vs实际功率对比')
+        ax1.plot(time_index, actual, label='实际功率', alpha=0.8, linewidth=1.5, color='blue')
+        ax1.plot(time_index, predicted, label='预测功率', alpha=0.8, linewidth=1.5, color='red')
+        
+        # 标注白天时段
+        daytime_indices = np.where(daytime_mask)[0]
+        if len(daytime_indices) > 0:
+            ax1.scatter(daytime_indices, actual[daytime_mask], 
+                       color='lightblue', alpha=0.3, s=10, label='白天时段')
+        
+        ax1.set_title('预测vs实际功率对比 (蓝点为白天时段)')
         ax1.set_xlabel('时间点')
         ax1.set_ylabel('功率 (MW)')
         ax1.legend()
         ax1.grid(True, alpha=0.3)
         
-        # 2. 散点图
+        # 2. 散点图 - 只使用白天数据
         ax2 = axes[0, 1]
-        ax2.scatter(actual, predicted, alpha=0.6, s=20)
-        max_val = max(actual.max(), predicted.max())
+        ax2.scatter(actual_day, predicted_day, alpha=0.6, s=20)
+        max_val = max(actual_day.max(), predicted_day.max())
         ax2.plot([0, max_val], [0, max_val], 'r--', label='理想预测线')
-        ax2.set_title('预测vs实际散点图')
+        ax2.set_title('预测vs实际散点图 (仅白天时段)')
         ax2.set_xlabel('实际功率 (MW)')
         ax2.set_ylabel('预测功率 (MW)')
         ax2.legend()
         ax2.grid(True, alpha=0.3)
         
-        # 3. 误差分布
+        # 3. 误差分布 - 只使用白天数据
         ax3 = axes[0, 2]
-        errors = predicted - actual
-        ax3.hist(errors, bins=30, alpha=0.7, edgecolor='black')
-        ax3.axvline(errors.mean(), color='red', linestyle='--', 
-                   label=f'平均误差: {errors.mean():.3f}')
-        ax3.set_title('预测误差分布')
+        errors_day = predicted_day - actual_day
+        ax3.hist(errors_day, bins=30, alpha=0.7, edgecolor='black')
+        ax3.axvline(errors_day.mean(), color='red', linestyle='--', 
+                   label=f'平均误差: {errors_day.mean():.3f}')
+        ax3.set_title('预测误差分布 (仅白天时段)')
         ax3.set_xlabel('预测误差 (MW)')
         ax3.set_ylabel('频次')
         ax3.legend()
         ax3.grid(True, alpha=0.3)
         
-        # 4. 相对误差分布
+        # 4. 相对误差分布 - 只使用白天数据
         ax4 = axes[1, 0]
-        relative_errors = (predicted - actual) / self.capacity * 100
-        ax4.hist(relative_errors, bins=30, alpha=0.7, edgecolor='black', color='orange')
-        ax4.axvline(relative_errors.mean(), color='red', linestyle='--',
-                   label=f'平均相对误差: {relative_errors.mean():.2f}%')
-        ax4.set_title('相对误差分布 (相对于开机容量)')
+        relative_errors_day = (predicted_day - actual_day) / self.capacity * 100
+        ax4.hist(relative_errors_day, bins=30, alpha=0.7, edgecolor='black', color='orange')
+        ax4.axvline(relative_errors_day.mean(), color='red', linestyle='--',
+                   label=f'平均相对误差: {relative_errors_day.mean():.2f}%')
+        ax4.set_title('相对误差分布 (仅白天时段)')
         ax4.set_xlabel('相对误差 (%)')
         ax4.set_ylabel('频次')
         ax4.legend()
         ax4.grid(True, alpha=0.3)
         
-        # 5. 累积误差
+        # 5. 累积误差 - 只使用白天数据
         ax5 = axes[1, 1]
-        cumulative_error = np.cumsum(errors)
-        ax5.plot(time_index, cumulative_error, linewidth=2)
-        ax5.set_title('累积误差趋势')
-        ax5.set_xlabel('时间点')
+        cumulative_error_day = np.cumsum(errors_day)
+        day_time_index = range(len(errors_day))
+        ax5.plot(day_time_index, cumulative_error_day, linewidth=2)
+        ax5.set_title('累积误差趋势 (仅白天时段)')
+        ax5.set_xlabel('白天时间点')
         ax5.set_ylabel('累积误差 (MW)')
         ax5.grid(True, alpha=0.3)
         
-        # 6. 误差箱线图
+        # 6. 误差箱线图 - 只使用白天数据
         ax6 = axes[1, 2]
-        error_data = [errors]
-        ax6.boxplot(error_data, labels=[station_id])
-        ax6.set_title('预测误差箱线图')
+        error_data = [errors_day]
+        box_plot = ax6.boxplot(error_data, labels=[f'{station_id}\n(白天时段)'])
+        ax6.set_title('预测误差箱线图 (仅白天时段)')
         ax6.set_ylabel('预测误差 (MW)')
         ax6.grid(True, alpha=0.3)
+        
+        # 添加箱线图统计信息
+        q1, median, q3 = np.percentile(errors_day, [25, 50, 75])
+        ax6.text(1.1, median, f'中位数: {median:.3f}', 
+                transform=ax6.get_xaxis_transform(), fontsize=10)
+        ax6.text(1.1, q1, f'Q1: {q1:.3f}', 
+                transform=ax6.get_xaxis_transform(), fontsize=10)
+        ax6.text(1.1, q3, f'Q3: {q3:.3f}', 
+                transform=ax6.get_xaxis_transform(), fontsize=10)
         
         plt.tight_layout()
         plt.savefig(save_dir / f'{station_id}_detailed_evaluation.png', 
                    dpi=300, bbox_inches='tight')
         plt.close()  # 关闭图片，不显示弹窗
+        
+        print(f"✅ {station_id} 详细评价图表已生成 (仅使用{len(actual_day)}个白天时段数据点)")
     
     def create_metrics_comparison_chart(self, metrics_dict, save_dir="results/figures"):
         """创建多站点指标对比图表"""
+        self.ensure_chinese_font()
+        
         save_dir = Path(save_dir)
         save_dir.mkdir(parents=True, exist_ok=True)
         
@@ -282,6 +292,8 @@ class PowerPredictionEvaluator:
     
     def create_radar_chart(self, metrics, station_id, save_dir="results/figures"):
         """创建雷达图"""
+        self.ensure_chinese_font()
+        
         save_dir = Path(save_dir)
         save_dir.mkdir(parents=True, exist_ok=True)
         

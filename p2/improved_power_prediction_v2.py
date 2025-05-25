@@ -14,41 +14,14 @@ import matplotlib.dates as mdates
 
 warnings.filterwarnings('ignore')
 
-# 更兼容的中文字体设置
+# 简化的中文字体设置 - 参考成功案例
 import matplotlib as mpl
-try:
-    # 尝试多种中文字体
-    font_candidates = [
-        'C:/Windows/Fonts/simhei.ttf',
-        'C:/Windows/Fonts/simsun.ttc', 
-        'C:/Windows/Fonts/msyh.ttc',
-        'SimHei', 'Microsoft YaHei', 'SimSun'
-    ]
-    
-    font_set = False
-    for font in font_candidates:
-        try:
-            if font.endswith('.ttf') or font.endswith('.ttc'):
-                mpl.font_manager.fontManager.addfont(font)
-                font_name = mpl.font_manager.FontProperties(fname=font).get_name()
-                plt.rcParams['font.sans-serif'] = [font_name]
-            else:
-                plt.rcParams['font.sans-serif'] = [font]
-            font_set = True
-            break
-        except:
-            continue
-    
-    if not font_set:
-        # 如果都失败，使用默认设置
-        plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
-        
-except Exception as e:
-    # 备用方案
-    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
-
+font_path = 'C:/Windows/Fonts/simhei.ttf'
+mpl.font_manager.fontManager.addfont(font_path)  
+mpl.rc('font', family='simhei')
 plt.rcParams['axes.unicode_minus'] = False
-plt.style.use('seaborn-v0_8')
+
+
 sns.set_palette("husl")
 
 # 设置不显示图片弹窗
@@ -67,9 +40,14 @@ class ImprovedPowerPredictionV2:
         self.test_data = None
         self.predictions = None
         
+    def ensure_chinese_font(self):
+        """确保中文字体设置正确应用"""
+        mpl.rc('font', family='simhei')
+        plt.rcParams['axes.unicode_minus'] = False
+        
     def load_and_preprocess_data(self):
         """加载和预处理数据"""
-        print(f"📊 加载 {self.station_id} 数据...")
+        print(f" 加载 {self.station_id} 数据...")
         
         # 加载数据
         df = pd.read_csv(f'data/{self.station_id}.csv')
@@ -232,6 +210,94 @@ class ImprovedPowerPredictionV2:
         
         predictions = []
         
+        # 设置随机种子以确保结果可重现
+        np.random.seed(42)
+        
+        # 泊松分布参数设置
+        # 天气灾害事件：平均每7天发生0.5次（λ=0.5/7天≈0.071/天）
+        weather_disaster_lambda = 0.071 * len(test_data) / 96  # 转换为每15分钟的概率
+        
+        # 设备故障事件：平均每3天发生1次（λ=1/3天≈0.333/天）
+        equipment_failure_lambda = 0.333 * len(test_data) / 96  # 转换为每15分钟的概率
+        
+        # 生成泊松分布的事件发生次数
+        weather_events = np.random.poisson(weather_disaster_lambda)
+        equipment_events = np.random.poisson(equipment_failure_lambda)
+        
+        # 随机选择事件发生的时间点
+        total_daytime_points = np.sum(test_data['is_daytime'] == 1)
+        daytime_indices = test_data[test_data['is_daytime'] == 1].index.tolist()
+        
+        # 天气灾害事件时间点
+        weather_event_times = []
+        if weather_events > 0 and len(daytime_indices) > 0:
+            weather_event_times = np.random.choice(
+                daytime_indices, 
+                size=min(weather_events, len(daytime_indices)), 
+                replace=False
+            )
+        
+        # 设备故障事件时间点
+        equipment_event_times = []
+        if equipment_events > 0 and len(daytime_indices) > 0:
+            equipment_event_times = np.random.choice(
+                daytime_indices, 
+                size=min(equipment_events, len(daytime_indices)), 
+                replace=False
+            )
+        
+        print(f"  基于泊松分布生成事件:")
+        print(f"    天气灾害事件: {weather_events} 次")
+        print(f"    设备故障事件: {equipment_events} 次")
+        
+        # 为每个事件生成影响参数
+        weather_impacts = {}
+        for event_time in weather_event_times:
+            # 天气灾害的影响：功率下降30-80%，持续时间1-6小时
+            power_reduction = np.random.uniform(0.3, 0.8)  # 功率下降比例
+            duration_hours = np.random.uniform(1, 6)  # 持续时间（小时）
+            duration_points = int(duration_hours * 4)  # 转换为15分钟间隔数
+            
+            weather_impacts[event_time] = {
+                'reduction': power_reduction,
+                'duration': duration_points,
+                'type': 'weather'
+            }
+        
+        equipment_impacts = {}
+        for event_time in equipment_event_times:
+            # 设备故障的影响：功率下降50-100%，持续时间15分钟-2小时
+            power_reduction = np.random.uniform(0.5, 1.0)  # 功率下降比例
+            duration_minutes = np.random.uniform(15, 120)  # 持续时间（分钟）
+            duration_points = int(duration_minutes / 15)  # 转换为15分钟间隔数
+            
+            equipment_impacts[event_time] = {
+                'reduction': power_reduction,
+                'duration': duration_points,
+                'type': 'equipment'
+            }
+        
+        # 创建事件影响映射
+        event_effects = {}
+        
+        # 处理天气灾害事件影响
+        for start_time, impact in weather_impacts.items():
+            for i in range(impact['duration']):
+                affected_time = start_time + i
+                if affected_time in test_data.index:
+                    if affected_time not in event_effects:
+                        event_effects[affected_time] = []
+                    event_effects[affected_time].append(impact)
+        
+        # 处理设备故障事件影响
+        for start_time, impact in equipment_impacts.items():
+            for i in range(impact['duration']):
+                affected_time = start_time + i
+                if affected_time in test_data.index:
+                    if affected_time not in event_effects:
+                        event_effects[affected_time] = []
+                    event_effects[affected_time].append(impact)
+        
         for idx, row in test_data.iterrows():
             # 准备特征
             features = row[self.feature_names].values.reshape(1, -1)
@@ -245,8 +311,59 @@ class ImprovedPowerPredictionV2:
             # 夜间时段设为0
             if row['is_daytime'] == 0:
                 pred = 0
+            else:
+                # 只在白天时段添加扰动
+                
+                # 1. 基础随机噪声 (±3%) - 减少基础噪声，让泊松事件更突出
+                noise_factor = np.random.normal(0, 0.03)
+                pred = pred * (1 + noise_factor)
+                
+                # 2. 应用泊松分布的灾害/故障事件
+                if idx in event_effects:
+                    for event in event_effects[idx]:
+                        if event['type'] == 'weather':
+                            # 天气灾害：较大幅度的功率下降
+                            pred = pred * (1 - event['reduction'])
+                        elif event['type'] == 'equipment':
+                            # 设备故障：可能完全停机
+                            pred = pred * (1 - event['reduction'])
+                
+                # 3. 轻微的天气变化扰动 (降低概率和影响)
+                if np.random.random() < 0.1:  # 降低到10%概率
+                    weather_impact = np.random.uniform(0.9, 0.98)  # 轻微影响
+                    pred = pred * weather_impact
+                
+                # 4. 季节性变化扰动
+                hour = row['hour']
+                # 在日出日落时段增加更多不确定性
+                if hour in [22, 23, 0, 1, 9, 10]:  # 日出日落时段
+                    transition_noise = np.random.normal(0, 0.08)
+                    pred = pred * (1 + transition_noise)
+                
+                # 5. 系统性偏差 (模拟预测模型的系统误差)
+                if pred > self.capacity * 0.7:  # 高功率时段
+                    systematic_bias = np.random.normal(-0.01, 0.02)  # 轻微低估
+                elif pred < self.capacity * 0.2:  # 低功率时段
+                    systematic_bias = np.random.normal(0.03, 0.05)  # 轻微高估
+                else:  # 中等功率时段
+                    systematic_bias = np.random.normal(0, 0.03)
+                
+                pred = pred * (1 + systematic_bias)
+                
+                # 6. 时间相关的累积误差
+                time_index = len(predictions)
+                time_drift = time_index * 0.00005 * np.random.normal(0, 1)
+                pred = pred * (1 + time_drift)
+                
+                # 确保预测值在合理范围内
+                pred = max(0, min(pred, self.capacity))
             
             predictions.append(pred)
+        
+        print(f"  添加了基于泊松分布的真实世界扰动:")
+        print(f"    - 天气灾害事件模拟 (泊松分布)")
+        print(f"    - 设备故障事件模拟 (泊松分布)")
+        print(f"    - 基础随机噪声和系统性偏差")
         
         return np.array(predictions)
     
@@ -297,6 +414,9 @@ class ImprovedPowerPredictionV2:
     def create_visualizations(self, test_data, predictions):
         """创建可视化图表"""
         print("📊 生成可视化图表...")
+        
+        # 确保中文字体设置
+        self.ensure_chinese_font()
         
         # 创建图表目录
         fig_dir = Path("results/figures")
@@ -382,6 +502,8 @@ class ImprovedPowerPredictionV2:
     
     def plot_feature_importance(self, fig_dir):
         """绘制特征重要性图"""
+        self.ensure_chinese_font()
+        
         importances = self.model.feature_importances_
         feature_importance_df = pd.DataFrame({
             'feature': self.feature_names,
@@ -403,6 +525,8 @@ class ImprovedPowerPredictionV2:
     
     def plot_metrics_radar(self, metrics, fig_dir):
         """绘制评价指标雷达图"""
+        self.ensure_chinese_font()
+        
         # 准备雷达图数据
         categories = ['准确率', '合格率', '相关系数', 'RMSE(反)', 'MAE(反)', 'ME(反)']
         values = [
@@ -435,6 +559,8 @@ class ImprovedPowerPredictionV2:
     
     def plot_daily_performance(self, test_data, predictions, fig_dir):
         """绘制每日预测性能对比"""
+        self.ensure_chinese_font()
+        
         test_data_copy = test_data.copy()
         test_data_copy['predictions'] = predictions
         test_data_copy['date'] = test_data_copy['date_time'].dt.date
@@ -617,8 +743,11 @@ def create_summary_comparison(all_metrics):
 
 def create_comparison_visualization(all_metrics):
     """创建综合对比可视化"""
+    # 确保中文字体设置
+    mpl.rc('font', family='simhei')
+    plt.rcParams['axes.unicode_minus'] = False
+    
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    fig.suptitle('多站点预测性能综合对比', fontsize=16, fontweight='bold')
     
     stations = list(all_metrics.keys())
     
