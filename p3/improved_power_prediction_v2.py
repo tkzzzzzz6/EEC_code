@@ -199,7 +199,7 @@ class ImprovedPowerPredictionV2:
         train_r2 = r2_score(y_train, train_pred)
         train_mae = mean_absolute_error(y_train, train_pred)
         
-        print(f"  训练集 R²: {train_r2:.4f}")
+        print(f"  训练集 R^2: {train_r2:.4f}")
         print(f"  训练集 MAE: {train_mae:.4f}")
         
         return self.model

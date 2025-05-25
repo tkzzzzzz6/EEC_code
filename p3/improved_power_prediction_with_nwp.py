@@ -325,7 +325,7 @@ class NWPPowerPrediction:
             
             train_r2 = r2_score(y_train, train_pred)
             train_mae = mean_absolute_error(y_train, train_pred)
-            print(f"    {model_name} - R²: {train_r2:.4f}, MAE: {train_mae:.4f}")
+            print(f"    {model_name} - R^2: {train_r2:.4f}, MAE: {train_mae:.4f}")
     
     def predict_test_period(self, test_data):
         """使用不同模型预测测试期间的功率"""

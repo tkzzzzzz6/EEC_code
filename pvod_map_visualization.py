@@ -401,7 +401,7 @@ class PVODMapVisualizer:
         slope, intercept, r_value, p_value, std_err = stats.linregress(distances, avg_cfs)
         line = slope * distances + intercept
         axes[1, 1].plot(distances, line, 'r--', alpha=0.8, linewidth=2, 
-                       label=f'趋势线 (R² = {r_value**2:.3f})')
+                       label=f'趋势线 (R^2 = {r_value**2:.3f})')
         
         axes[1, 1].set_title('距离最优站点位置与性能关系', fontweight='bold', fontsize=12)
         axes[1, 1].set_xlabel('距离最优站点距离 (度)')
