@@ -5,11 +5,45 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 
-# 设置中文字体和绘图样式
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS']
+# 更兼容的中文字体设置
+import matplotlib as mpl
+try:
+    # 尝试多种中文字体
+    font_candidates = [
+        'C:/Windows/Fonts/simhei.ttf',
+        'C:/Windows/Fonts/simsun.ttc', 
+        'C:/Windows/Fonts/msyh.ttc',
+        'SimHei', 'Microsoft YaHei', 'SimSun'
+    ]
+    
+    font_set = False
+    for font in font_candidates:
+        try:
+            if font.endswith('.ttf') or font.endswith('.ttc'):
+                mpl.font_manager.fontManager.addfont(font)
+                font_name = mpl.font_manager.FontProperties(fname=font).get_name()
+                plt.rcParams['font.sans-serif'] = [font_name]
+            else:
+                plt.rcParams['font.sans-serif'] = [font]
+            font_set = True
+            break
+        except:
+            continue
+    
+    if not font_set:
+        # 如果都失败，使用默认设置
+        plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+        
+except Exception as e:
+    # 备用方案
+    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+
 plt.rcParams['axes.unicode_minus'] = False
 plt.style.use('seaborn-v0_8')
 sns.set_palette("husl")
+
+# 设置不显示图片弹窗
+plt.ioff()
 
 class PowerPredictionEvaluator:
     """光伏发电功率预测评价指标计算器 + 可视化"""
@@ -162,7 +196,7 @@ class PowerPredictionEvaluator:
         plt.tight_layout()
         plt.savefig(save_dir / f'{station_id}_detailed_evaluation.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
     
     def create_metrics_comparison_chart(self, metrics_dict, save_dir="results/figures"):
         """创建多站点指标对比图表"""
@@ -244,7 +278,7 @@ class PowerPredictionEvaluator:
         plt.tight_layout()
         plt.savefig(save_dir / 'multi_station_metrics_comparison.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
     
     def create_radar_chart(self, metrics, station_id, save_dir="results/figures"):
         """创建雷达图"""
@@ -283,7 +317,7 @@ class PowerPredictionEvaluator:
         plt.tight_layout()
         plt.savefig(save_dir / f'{station_id}_radar_chart.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
 
 def evaluate_station_predictions():
     """评估所有站点的预测结果"""

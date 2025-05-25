@@ -14,11 +14,45 @@ import matplotlib.dates as mdates
 
 warnings.filterwarnings('ignore')
 
-# 设置中文字体和绘图样式
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS']
+# 更兼容的中文字体设置
+import matplotlib as mpl
+try:
+    # 尝试多种中文字体
+    font_candidates = [
+        'C:/Windows/Fonts/simhei.ttf',
+        'C:/Windows/Fonts/simsun.ttc', 
+        'C:/Windows/Fonts/msyh.ttc',
+        'SimHei', 'Microsoft YaHei', 'SimSun'
+    ]
+    
+    font_set = False
+    for font in font_candidates:
+        try:
+            if font.endswith('.ttf') or font.endswith('.ttc'):
+                mpl.font_manager.fontManager.addfont(font)
+                font_name = mpl.font_manager.FontProperties(fname=font).get_name()
+                plt.rcParams['font.sans-serif'] = [font_name]
+            else:
+                plt.rcParams['font.sans-serif'] = [font]
+            font_set = True
+            break
+        except:
+            continue
+    
+    if not font_set:
+        # 如果都失败，使用默认设置
+        plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+        
+except Exception as e:
+    # 备用方案
+    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+
 plt.rcParams['axes.unicode_minus'] = False
 plt.style.use('seaborn-v0_8')
 sns.set_palette("husl")
+
+# 设置不显示图片弹窗
+plt.ioff()
 
 class ImprovedPowerPredictionV2:
     """改进版光伏发电功率预测模型 - 使用真实历史数据"""
@@ -268,9 +302,6 @@ class ImprovedPowerPredictionV2:
         fig_dir = Path("results/figures")
         fig_dir.mkdir(exist_ok=True)
         
-        # 设置图表样式
-        plt.style.use('seaborn-v0_8')
-        
         # 1. 预测vs实际对比图
         fig, axes = plt.subplots(2, 2, figsize=(16, 12))
         fig.suptitle(f'{self.station_id} 光伏发电功率预测分析', fontsize=16, fontweight='bold')
@@ -335,7 +366,7 @@ class ImprovedPowerPredictionV2:
         plt.tight_layout()
         plt.savefig(fig_dir / f'{self.station_id}_prediction_analysis.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
         
         # 2. 特征重要性图
         if hasattr(self.model, 'feature_importances_'):
@@ -368,7 +399,7 @@ class ImprovedPowerPredictionV2:
         plt.tight_layout()
         plt.savefig(fig_dir / f'{self.station_id}_feature_importance.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
     
     def plot_metrics_radar(self, metrics, fig_dir):
         """绘制评价指标雷达图"""
@@ -400,7 +431,7 @@ class ImprovedPowerPredictionV2:
         plt.tight_layout()
         plt.savefig(fig_dir / f'{self.station_id}_metrics_radar.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
     
     def plot_daily_performance(self, test_data, predictions, fig_dir):
         """绘制每日预测性能对比"""
@@ -464,7 +495,7 @@ class ImprovedPowerPredictionV2:
         plt.tight_layout()
         plt.savefig(fig_dir / f'{self.station_id}_daily_performance.png', 
                    dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # 关闭图片，不显示弹窗
     
     def run_complete_analysis(self):
         """运行完整的分析流程"""
@@ -643,7 +674,7 @@ def create_comparison_visualization(all_metrics):
     plt.tight_layout()
     plt.savefig('results/figures/multi_station_comparison.png', 
                dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close()  # 关闭图片，不显示弹窗
 
 if __name__ == "__main__":
     # 运行多站点分析
