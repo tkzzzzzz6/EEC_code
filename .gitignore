@@ -1,0 +1,7 @@
+desktop.ini
+# 忽视苹果的文件
+.DS_Store
+
+# 忽视pycache
+__pycache__
+
